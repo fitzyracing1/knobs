@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>knobs: the defaults that change under you</title>
+<meta name="description" content="A knob is a default parameter or setting in a dependency or project that can change silently between versions and change your behavior.">
+<style>
+:root{--bg:#0d1117;--fg:#e6edf3;--mut:#8b949e;--acc:#f0883e;--card:#161b22;--bd:#30363d}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:880px;margin:0 auto;padding:48px 20px}h1{font-size:3rem;margin:0}h1 span{color:var(--acc)}
+.def{font-size:1.25rem;border-left:4px solid var(--acc);padding:8px 16px;margin:24px 0;background:var(--card)}
+a{color:#58a6ff}code{background:var(--card);padding:1px 5px;border-radius:4px;font-size:.92em}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.94rem}td,th{border-bottom:1px solid var(--bd);padding:8px 6px;text-align:left;vertical-align:top}
+th{color:var(--mut);font-weight:600}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:16px}.card h3{margin:0 0 6px}.card p{margin:0;color:var(--mut)}
+.tag{font-size:.75rem;color:var(--acc);text-transform:uppercase;letter-spacing:.05em}.arrow{color:var(--acc)}footer{color:var(--mut);margin-top:48px;font-size:.9rem}
+</style></head><body><main>
+<h1>knobs<span>.</span></h1>
+<p class="def"><strong>knob</strong> (n.): a default parameter or setting in a dependency or project that can change silently between versions and change how your system behaves.</p>
+<p>You didn't change your code. You bumped a version or pulled upstream, and now the robot brakes harder, the server trusts a different proxy, or the feed ranks likes differently. A default moved, and no changelog said so.</p>
+<h2>Why knobs matter</h2>
+<ul>
+<li><b>Silent.</b> They change in commits called "update params". Release notes rarely list them.</li>
+<li><b>Behavioural.</b> A gain, threshold, timeout or weight <em>is</em> behaviour.</li>
+<li><b>Inherited.</b> Every default you didn't set is a decision someone upstream can revise.</li>
+<li><b>Checkable.</b> A default is a literal in a file. Diff it and you know exactly what moved, from what, to what, and in which commit.</li>
+</ul>
+<h2>Real knobs</h2>
+<table><tr><th>Project</th><th>Knob</th><th>Change</th></tr>
+<tr><td>X algorithm</td><td><code>FavoriteWeight</code></td><td>0.5 <span class="arrow">→</span> 0.6 (<a href="https://github.com/xai-org/x-algorithm/commit/e1a0375">Oct 13</a>) <span class="arrow">→</span> 0.66 (<a href="https://github.com/xai-org/x-algorithm/commit/17c96bf">Oct 14</a>)</td></tr>
+<tr><td>Nav2</td><td><code>inflation_layer/inflation_radius</code></td><td>0.55 <span class="arrow">→</span> 0.7 (27% higher)</td></tr>
+<tr><td>Nav2</td><td><code>collision_monitor/FootprintApproach/time_before_collision</code></td><td>2.0 <span class="arrow">→</span> 1.2 (40% lower)</td></tr>
+<tr><td>Nav2</td><td><code>velocity_smoother/max_accel[0]</code></td><td>2.5 <span class="arrow">→</span> 3.0 (20% higher)</td></tr>
+<tr><td>PX4</td><td><code>FW_T_HRATE_FF</code></td><td>0.3 <span class="arrow">→</span> 0.5 (<a href="https://github.com/PX4/PX4-Autopilot/commit/d84f6c324aec68ad3468a708036fc4cad7f298a5">d84f6c3</a>)</td></tr>
+<tr><td>PX4</td><td><code>MPC_LAND_RADIUS</code></td><td>1000.f <span class="arrow">→</span> -1.0f, sign flipped (<a href="https://github.com/PX4/PX4-Autopilot/commit/1c821cf83dcd688a185f00205700212af191e8b5">1c821cf</a>)</td></tr>
+<tr><td>ArduPilot</td><td><code>AC_Loiter/OPTIONS</code></td><td>1 <span class="arrow">→</span> 0</td></tr>
+<tr><td>gunicorn 20.1 → 23.0</td><td><code>forwarded_allow_ips</code></td><td>'127.0.0.1' <span class="arrow">→</span> '127.0.0.1,::1' (<a href="https://github.com/fitzyracing1/knobs-guard-demo/pull/1">guard PR comment</a>)</td></tr>
+</table>
+<h2>The toolkit</h2>
+<div class="grid">
+<div class="card"><div class="tag">core</div><h3><a href="https://github.com/fitzyracing1/knoblog">knoblog</a></h3><p>Every changed default in a git history: site, feeds, changes.json and X-ready text. Now with commit message and PR link per change. <code>pip install knoblog</code></p></div>
+<div class="card"><div class="tag">1 · PR check</div><h3><a href="https://github.com/fitzyracing1/knoblog-upgrade-guard">upgrade guard</a></h3><p>GitHub Action: dependency-bump PRs get a comment listing changed defaults. <a href="https://github.com/fitzyracing1/knobs-guard-demo/pull/1">Live demo</a>.</p></div>
+<div class="card"><div class="tag">2 · watch</div><h3><a href="https://fitzyracing1.github.io/knobs-watch/">knobs-watch</a></h3><p>Knob changelogs for PyTorch, Kubernetes, Next.js, Home Assistant and more, refreshed on a schedule.</p></div>
+<div class="card"><div class="tag">3 · why</div><h3><a href="https://github.com/fitzyracing1/knoblog/pull/1">Why it changed</a></h3><p>The commit message and PR link on every changed default.</p></div>
+<div class="card"><div class="tag">4 · feeds</div><h3><a href="https://fitzyracing1.github.io/knobs-watch/posts/">X feeds</a></h3><p>One post feed per project, config-driven. Posting stays off until it's switched on.</p></div>
+<div class="card"><div class="tag">5 · digest</div><h3><a href="https://fitzyracing1.github.io/knobs-watch/digest/">Weekly digest</a></h3><p>A weekly email per project, HTML and text. Sign up through a GitHub issue.</p></div>
+<div class="card"><div class="tag">live</div><h3><a href="https://fitzyracing1.github.io/x-algorithm-changelog/">x-algorithm-changelog</a></h3><p>Every weight and threshold change in X's open-source ranking algorithm.</p></div>
+<div class="card"><div class="tag">posting</div><h3><a href="https://fitzyracing1.github.io/repocast/">repocast</a></h3><p>Turns repo changes into accurate X posts and posts them safely.</p></div>
+</div>
+<footer>MIT · <a href="https://github.com/fitzyracing1/knobs">github.com/fitzyracing1/knobs</a> · by Joshua Almeida</footer>
+</main></body></html>
